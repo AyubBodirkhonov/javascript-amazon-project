@@ -1,6 +1,6 @@
+import { cart } from "../data/cart.js";
 
 let productsHTML = "";
-
 
 products.forEach(product => {
     const { image, name, rating, priceCents, id } = product;
@@ -16,7 +16,7 @@ products.forEach(product => {
               </div>
     
               <div class="product-rating-container">
-                <img class="product-rating-stars"
+                 <img class="product-rating-stars"
                   src="images/ratings/rating-${rating.stars * 10}.png">
                 <div class="product-rating-count link-primary">
                   ${rating.count}
@@ -28,7 +28,7 @@ products.forEach(product => {
               </div>
     
               <div class="product-quantity-container">
-                <select>
+                <select class="js-quantity-selector-${id}">
                   <option selected value="1">1</option>
                   <option value="2">2</option>
                   <option value="3">3</option>
@@ -50,7 +50,7 @@ products.forEach(product => {
               </div>
     
               <button class="add-to-cart-button button-primary js-add-to-cart"
-              data-product-id="${id}"
+                 data-product-id="${id}"
               >
                 Add to Cart
               </button>
@@ -64,8 +64,11 @@ document.querySelector('.js-products-grid')
 document.querySelectorAll('.js-add-to-cart')
     .forEach((button) => {
         button.addEventListener('click', () => {
+            //how do we know which product to add?
+            //with the help of data attribute/html attribute/it allows us to attach any information to an element
             const productId = button.dataset.productId;
             //We will check whether the product is already in the cart or not
+            const selectedValue = document.querySelector(`js-quantity-selector-${productId}`);
             let matchingItem;
 
             cart.forEach(item => {
@@ -73,7 +76,8 @@ document.querySelectorAll('.js-add-to-cart')
                    matchingItem = item;
                 }
             })
-
+            //if similar item is in the cart, increase the quantity, otherwise add a new one
+            //matchingItem is an object which is truthy value
             if (matchingItem) {
                 matchingItem.quantity++;
             } else {
@@ -82,6 +86,8 @@ document.querySelectorAll('.js-add-to-cart')
                     quantity: 1
                 })
             }
+            // this is how to control the number of orders
+
             let cartQuantity = 0;
             cart.forEach((item) => {
                 cartQuantity += item.quantity;
@@ -90,4 +96,5 @@ document.querySelectorAll('.js-add-to-cart')
                 .innerHTML = cartQuantity;
         })
     })
+
 
